@@ -1,0 +1,28 @@
+name: Build artifact
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
+    - name: Install dependencies
+      run: |
+        pip install -U pip
+        pip install -r requirements.txt
+        pip install git+https://github.com/pyinstaller/pyinstaller.git@develop
+    - name: build with pyinstaller
+      run: |
+        pyinstaller pyinstaller.spec
+    - uses: actions/upload-artifact@v1
+      with:
+        name: Windows Executable
+        path: dist
