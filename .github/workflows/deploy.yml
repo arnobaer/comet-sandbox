@@ -1,0 +1,33 @@
+name: Deploy release
+
+on:
+  release:
+    types:
+      - created
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
+    - name: Install dependencies
+      run: |
+        pip install -U pip
+        pip install -r requirements.txt
+        pip install git+https://github.com/pyinstaller/pyinstaller.git@develop
+    - name: Build executable
+      run: |
+        pyinstaller pyinstaller.spec
+    - name: Upload release asset
+      uses: actions/upload-release-asset@latest
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: dist/comet-sandbox.exe
+        asset_name: comet-sandbox-${{ github.event.release.tag_name }}.exe
+        asset_content_type: binary/octet-stream
