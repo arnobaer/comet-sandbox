@@ -18,7 +18,7 @@ jobs:
       run: |
         pip install -U pip
         pip install -r requirements.txt
-        pip install git+https://github.com/pyinstaller/pyinstaller.git@develop
+        pip install PyInstaller>=3.6
     - name: Build executable
       run: |
         pyinstaller pyinstaller.spec
