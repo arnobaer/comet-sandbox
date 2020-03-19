@@ -3,15 +3,15 @@ name: Deploy release
 on:
   release:
     types:
-      - created
+      - published
 
 jobs:
-  build:
+  deploy:
+    name: Deploy
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v1
+    - uses: actions/setup-python@v1
       with:
         python-version: 3.8
     - name: Install dependencies
@@ -22,7 +22,7 @@ jobs:
     - name: Build executable
       run: |
         pyinstaller pyinstaller.spec
-    - name: Upload release asset
+    - name: Upload asset
       uses: actions/upload-release-asset@latest
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
